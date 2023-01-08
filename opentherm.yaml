@@ -5,8 +5,8 @@ esphome:
     - opentherm_gw_climate.h
     - opentherm_gw_climate.cpp
   name: opentherm_gateway
-  platform: ESP32
-  board: esp-wrover-kit
+  platform: ESP8266
+  board: d1_mini
 
 wifi:
   ssid: !secret wifi_ssid
@@ -27,40 +27,45 @@ sensor:
 binary_sensor:
 
 climate:
-- platform: custom
-  lambda: |-
-    auto thermostat_in = new esp32::ArduinoInternalGPIOPin();
-    thermostat_in->set_pin(26);
-    thermostat_in->pin_mode(gpio::FLAG_INPUT);
-    auto thermostat_out = new esp32::ArduinoInternalGPIOPin();
-    thermostat_out->set_pin(17);
-    thermostat_out->pin_mode(gpio::FLAG_OUTPUT);
-    auto boiler_in = new esp32::ArduinoInternalGPIOPin();
-    boiler_in->set_pin(25);
-    boiler_in->pin_mode(gpio::FLAG_INPUT);
-    auto boiler_out = new esp32::ArduinoInternalGPIOPin();
-    boiler_out->set_pin(16);
-    boiler_out->pin_mode(gpio::FLAG_OUTPUT);
-    auto ot = new esphome::opentherm::OpenThermGWClimate(thermostat_in, thermostat_out, boiler_in, boiler_out);
-    App.register_component(ot);
-    ot->ch_active = new BinarySensor("CH Active");
-    App.register_binary_sensor(ot->ch_active);
-    ot->dhw_active = new BinarySensor("DHW Active");
-    App.register_binary_sensor(ot->dhw_active);
-    ot->flame_on = new BinarySensor("Flame On");
-    App.register_binary_sensor(ot->flame_on);
-    ot->diagnostic_event = new BinarySensor("Diagnostic Event");
-    App.register_binary_sensor(ot->diagnostic_event);
-    ot->fault_indication = new BinarySensor("Fault Indication");
-    App.register_binary_sensor(ot->fault_indication);
-    ot->boiler_water_temp = new Sensor("Boiler Water Temperature");
-    App.register_sensor(ot->boiler_water_temp);
-    ot->dhw_temperature = new Sensor("DHW Temperature");
-    App.register_sensor(ot->dhw_temperature);
-    ot->return_water_temperature = new Sensor("Return Water Temperature");
-    App.register_sensor(ot->return_water_temperature);
-    ot->relative_modulation_level = new Sensor("Relative Modulation Level");
-    App.register_climate(ot);
-    return {ot};
-  climates:
-    - name: "livingroom"
+    platform: custom
+    lambda: |-
+      auto thermostat_in = new esphome::esp8266::ESP8266GPIOPin();
+      thermostat_in->set_pin(4);
+      thermostat_in->pin_mode(gpio::FLAG_INPUT);
+      auto thermostat_out = new esphome::esp8266::ESP8266GPIOPin();
+      thermostat_out->set_pin(5);
+      thermostat_out->pin_mode(gpio::FLAG_OUTPUT);
+      auto boiler_in = new esphome::esp8266::ESP8266GPIOPin();
+      boiler_in->set_pin(12);
+      boiler_in->pin_mode(gpio::FLAG_INPUT);
+      auto boiler_out = new esphome::esp8266::ESP8266GPIOPin();
+      boiler_out->set_pin(13);
+      boiler_out->pin_mode(gpio::FLAG_OUTPUT);
+      auto ot = new esphome::opentherm::OpenThermGWClimate(thermostat_in, thermostat_out, boiler_in, boiler_out);
+      App.register_component(ot);
+      ot->ch_active = new BinarySensor();
+      ot->ch_active->set_name("CH Active");
+      App.register_binary_sensor(ot->ch_active);
+      ot->dhw_active = new BinarySensor();
+      ot->dhw_active->set_name("DHW Active");
+      App.register_binary_sensor(ot->dhw_active);
+      ot->flame_on = new BinarySensor();
+      ot->flame_on->set_name("Flame On");
+      App.register_binary_sensor(ot->flame_on);
+      ot->diagnostic_event = new BinarySensor();
+      ot->diagnostic_event->set_name("Diagnostic Event");
+      App.register_binary_sensor(ot->diagnostic_event);
+      ot->fault_indication = new BinarySensor();
+      ot->fault_indication->set_name("Fault Indication");
+      App.register_binary_sensor(ot->fault_indication);
+      ot->boiler_water_temp = new Sensor("Boiler Water Temperature");
+      App.register_sensor(ot->boiler_water_temp);
+      ot->dhw_temperature = new Sensor("DHW Temperature");
+      App.register_sensor(ot->dhw_temperature);
+      ot->return_water_temperature = new Sensor("Return Water Temperature");
+      App.register_sensor(ot->return_water_temperature);
+      ot->relative_modulation_level = new Sensor("Relative Modulation Level");
+      App.register_climate(ot);
+      return {ot};
+    climates:
+      - name: "livingroom"
