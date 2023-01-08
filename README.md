@@ -1,4 +1,4 @@
-# OpenTherm gateway
+# OpenTherm gateway for the 8266
 Port of OpenTherm protocol to ESPHome.io firmware.
 
 Hardware:
