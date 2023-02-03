@@ -30,16 +30,16 @@ climate:
     platform: custom
     lambda: |-
       auto thermostat_in = new esphome::esp8266::ESP8266GPIOPin();
-      thermostat_in->set_pin(4);
+      thermostat_in->set_pin(12);
       thermostat_in->pin_mode(gpio::FLAG_INPUT);
       auto thermostat_out = new esphome::esp8266::ESP8266GPIOPin();
-      thermostat_out->set_pin(5);
+      thermostat_out->set_pin(13);
       thermostat_out->pin_mode(gpio::FLAG_OUTPUT);
       auto boiler_in = new esphome::esp8266::ESP8266GPIOPin();
-      boiler_in->set_pin(12);
+      boiler_in->set_pin(4);
       boiler_in->pin_mode(gpio::FLAG_INPUT);
       auto boiler_out = new esphome::esp8266::ESP8266GPIOPin();
-      boiler_out->set_pin(13);
+      boiler_out->set_pin(5);
       boiler_out->pin_mode(gpio::FLAG_OUTPUT);
       auto ot = new esphome::opentherm::OpenThermGWClimate(thermostat_in, thermostat_out, boiler_in, boiler_out);
       App.register_component(ot);
